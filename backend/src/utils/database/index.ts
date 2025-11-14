@@ -55,13 +55,15 @@ export const dbRequest = async (
 
     if (expectedReturn === ExpectedReturn.Multi) {
       if (resultSetNames && resultSetNames.length > 0) {
-        const namedResults: { [key: string]: IRecordSet } = {};
+        const namedResults: { [key: string]: any } = {};
         resultSetNames.forEach((name, index) => {
-          namedResults[name] = result.recordsets[index] as IRecordSet;
+          if (Array.isArray(result.recordsets)) {
+            namedResults[name] = result.recordsets[index];
+          }
         });
         return namedResults;
       }
-      return result.recordsets as IRecordSet<any>[];
+      return result.recordsets;
     }
 
     return result.recordset;
